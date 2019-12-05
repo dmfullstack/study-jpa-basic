@@ -2,6 +2,7 @@ package jpql;
 
 import jpql.domain.Address;
 import jpql.domain.Member;
+import jpql.domain.Team;
 import jpql.dto.MemberDTO;
 
 import javax.persistence.*;
@@ -16,14 +17,19 @@ public class JpaMain {
         tx.begin();
         try {
 
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 10; i++) {
+
+                Team team = new Team();
+                team.setName("team" + i);
+                em.persist(team);
+
                 Member member = new Member();
                 member.setUsername("member" + i);
                 member.setAge(i);
+                member.changeTeam(team);
+
                 em.persist(member);
             }
-
-
 
             em.flush();
             em.clear();
@@ -53,8 +59,13 @@ public class JpaMain {
                 System.out.println(member);
             }
 
+            // join
+            List<Member> resultList2 = em.createQuery("select m from Member m join m.team t on t.name = 'team1'", Member.class)
+                    .getResultList();
 
-
+            for (Member member : resultList2) {
+                System.out.println(member);
+            }
 
             tx.commit();
         } catch (Exception e) {

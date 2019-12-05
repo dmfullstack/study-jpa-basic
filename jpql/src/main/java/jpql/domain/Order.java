@@ -15,7 +15,6 @@ public class Order {
     private Address address;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
     private Product product;
 
     public Long getId() {
