@@ -67,6 +67,10 @@ public class JpaMain {
                 System.out.println(member);
             }
 
+            // type
+            List<Member> resultList3 = em.createQuery("select m from Member m where m.type = jpql.domain.MemberType.ADMIN", Member.class)
+                    .getResultList();
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
