@@ -71,6 +71,40 @@ public class JpaMain {
             List<Member> resultList3 = em.createQuery("select m from Member m where m.type = jpql.domain.MemberType.ADMIN", Member.class)
                     .getResultList();
 
+            for (Member member : resultList3) {
+                System.out.println(member);
+            }
+
+            // case
+            String query1 =
+                    "select " +
+                        "case when m.age <= 10 then '학생요금'" +
+                        "     when m.age >= 70 then '경로요금'" +
+                        "     else '일반요금'" +
+                        "end " +
+                    "from Member m";
+            List<String> resultList4 = em.createQuery(query1, String.class).getResultList();
+
+            for (String s : resultList4) {
+                System.out.println(s);
+            }
+
+            // coalesce
+            String query2 = "select coalesce(m.username, '이름 없는 회원') from Member m";
+            List<String> resultList5 = em.createQuery(query2, String.class).getResultList();
+
+            for (String s : resultList5) {
+                System.out.println(s);
+            }
+
+            // nullif
+            String query3 = "select NULLIF(m.username, '관리자') from Member m";
+            List<String> resultList6 = em.createQuery(query3, String.class).getResultList();
+
+            for (String s : resultList6) {
+                System.out.println(s);
+            }
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
