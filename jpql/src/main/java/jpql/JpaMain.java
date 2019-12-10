@@ -17,18 +17,23 @@ public class JpaMain {
         tx.begin();
         try {
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 5; i++) {
 
                 Team team = new Team();
                 team.setName("team" + i);
                 em.persist(team);
 
                 Member member = new Member();
-                member.setUsername("member" + i);
+                member.setUsername("memberA" + i);
                 member.setAge(i);
                 member.changeTeam(team);
-
                 em.persist(member);
+
+                Member memberB = new Member();
+                memberB.setUsername("memberB" + i);
+                memberB.setAge(i);
+                memberB.changeTeam(team);
+                em.persist(memberB);
             }
 
             em.flush();
@@ -36,7 +41,7 @@ public class JpaMain {
 
             // 엔티티 타입 프로젝션
             Member findMember = em.createQuery("select m from Member m where m.username = :username", Member.class)
-                    .setParameter("username", "member1")
+                    .setParameter("username", "memberA1")
                     .getSingleResult();
 
             System.out.println(findMember.getUsername());
@@ -105,8 +110,24 @@ public class JpaMain {
                 System.out.println(s);
             }
 
+            // fetch join
+            List<Member> resultList7 = em.createQuery("select m from Member m join fetch m.team", Member.class).getResultList();
+
+            for (Member member : resultList7) {
+                System.out.println(member.getTeam());
+            }
+
+            // 1:N fetch join
+            List<Team> resultList8 = em.createQuery("select distinct t from Team t join fetch t.members", Team.class).getResultList();
+
+            for (Team team : resultList8) {
+                System.out.println(team.getMembers().size());
+            }
+
+
             tx.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             tx.rollback();
         } finally {
             em.close();
