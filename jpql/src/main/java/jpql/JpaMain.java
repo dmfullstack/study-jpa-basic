@@ -124,6 +124,14 @@ public class JpaMain {
                 System.out.println(team.getMembers().size());
             }
 
+            // named query
+            List<Member> resultList9 = em.createNamedQuery("Member.findByUsername", Member.class)
+                    .setParameter("username", "memberA1")
+                    .getResultList();
+
+            for (Member member : resultList9) {
+                System.out.println(member);
+            }
 
             tx.commit();
         } catch (Exception e) {
