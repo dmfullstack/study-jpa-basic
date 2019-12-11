@@ -135,7 +135,7 @@ public class JpaMain {
 
             // executeUpdate
             int resultCount = em.createQuery("update Member m set m.age = 20").executeUpdate();
-
+            em.clear();
             System.out.println("resultCount = " + resultCount);
 
             tx.commit();
