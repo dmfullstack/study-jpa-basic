@@ -180,4 +180,26 @@ class MemberRepositoryTest {
         em.flush(); //Update Query 실행X
     }
 
+    @Test
+    public void EventBaseEntity() throws Exception {
+        //given
+        Member member = new Member("member1");
+        memberRepository.save(member);
+
+        Thread.sleep(100);
+        member.setUsername("member2");
+
+        em.flush();
+        em.clear();
+
+        //when
+        Member findMember = memberRepository.findById(member.getId()).get();
+
+        //then
+        System.out.println("create date = " + member.getCreatedDate());
+        System.out.println("modified date = " + findMember.getLastModifiedDate());
+        System.out.println("create by = " + member.getCreatedBy());
+        System.out.println("modified by = " + member.getLastModifiedBy());
+    }
+
 }
